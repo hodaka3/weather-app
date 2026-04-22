@@ -23,8 +23,13 @@ test:
 # Store production database in the storage/ directory, which by default
 # is mounted as a persistent Docker volume in config/deploy.yml.
 production:
-  <<: *default
-  adapter: postgresql
-  encoding: unicode
-  # Renderが提供する環境変数 DATABASE_URL を自動的に読み込む設定です
-  url: <%= ENV['DATABASE_URL'] %>
+  primary: &production_db
+    adapter: postgresql
+    encoding: unicode
+    url: <%= ENV['DATABASE_URL'] %>
+  cache:
+    <<: *production_db
+  queue:
+    <<: *production_db
+  cable:
+    <<: *production_db
