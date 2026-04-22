@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  datetime: 2026-04-23 02:31:52
+  temperature: 1.5
+  wind_speed: 1.5
+  precipitation: 1.5
+
+two:
+  datetime: 2026-04-23 02:31:52
+  temperature: 1.5
+  wind_speed: 1.5
+  precipitation: 1.5

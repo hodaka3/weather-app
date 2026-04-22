@@ -1,0 +1,22 @@
+<h1>地域別の天気予報（3時間おき）</h1>
+
+<table border="1">
+  <thead>
+    <tr>
+      <th>日時</th>
+      <th>気温 (°C)</th>
+      <th>風速 (m/s)</th>
+      <th>降水量 (mm)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @weathers.each do |w| %>
+      <tr>
+        <td><%= w.datetime.strftime("%m/%d %H:%M") %></td>
+        <td><%= w.temperature %></td>
+        <td><%= w.wind_speed %></td>
+        <td><%= w.precipitation %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
