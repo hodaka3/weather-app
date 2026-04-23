@@ -1,6 +1,8 @@
 class WeatherController < ApplicationController
   # コントローラー側の書き方例
   def index
+    @all_cities = City.select(:id, :jp_name, :latitude, :longitude)
+
     if params[:city_id].present?
       @city = City.find(params[:city_id])
       

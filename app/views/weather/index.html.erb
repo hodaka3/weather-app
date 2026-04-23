@@ -16,6 +16,42 @@
     <% end %>
   </div>
 
+  <div id="map" style="height: 500px; width: 100%; margin-top: 20px; border: 1px solid #ccc;"></div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // 1. 地図の初期化（日本全体が見えるように設定）
+      const map = L.map('map').setView([36.2048, 138.2529], 5);
+
+      // 2. 地図の背景（タイル）を設定
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+      }).addTo(map);
+
+      // 3. Railsから都市データを受け取る（コントローラーで @all_cities を用意しておく）
+      const cities = <%= @all_cities.to_json(only: [:id, :jp_name, :latitude, :longitude]).html_safe %>;
+
+      // 4. クラスターグループを作成
+      const markers = L.markerClusterGroup();
+
+      // 5. 各都市をマーカーとして追加
+      cities.forEach(city => {
+        if (city.latitude && city.longitude) {
+          const marker = L.marker([city.latitude, city.longitude])
+            .bindPopup(`
+              <strong>${city.jp_name}</strong><br>
+              <a href="/?city_id=${city.id}">この場所の天気を表示</a>
+            `);
+          markers.addLayer(marker);
+        }
+      });
+
+      // 6. クラスターを地図に追加
+      map.addLayer(markers);
+    });
+  </script>
+
+
   <%# 天気データの表示部分 %>
   <% if @city %>
     <h2><%= @city.jp_name %>（<%= @city.prefecture.name %>）の現在の天気</h2>

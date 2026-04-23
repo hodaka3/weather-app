@@ -9,49 +9,21 @@
 #   end
 
 # 都道府県の登録
-data = [
-  {pref: "北海道", cities: [
-    {name: "Sapporo", jp_name: "札幌"},
-    {name: "Asahikawa", jp_name: "旭川"},
-    {name: "Hakodate", jp_name: "函館"}
-  ]},
-  {pref: "青森県", cities: [
-    {name: "Aomori", jp_name: "青森"},
-    {name: "Hachinohe", jp_name: "八戸"},
-    {name: "Towada", jp_name: "十和田"}
-  ]},
-  {pref: "岩手県", cities: [
-    {name: "Morioka", jp_name: "盛岡"},
-    {name: "Ichinoseki", jp_name: "一関"},
-    {name: "Oshu", jp_name: "奥州"}
-  ]},
-  {pref: "宮城県", cities: [
-    {name: "Sendai", jp_name: "仙台"},
-    {name: "Ishinomaki", jp_name: "石巻"},
-    {name: "Shiogama", jp_name: "塩釜"}
-  ]},
-  {pref: "秋田県", cities: [
-    {name: "Akita", jp_name: "秋田"},
-    {name: "Yokote", jp_name: "横手"},
-    {name: "Oga", jp_name: "男鹿"}
-  ]},
-  {pref: "山形県", cities: [
-    {name: "Yamagata", jp_name: "山形"},
-    {name: "Tsuruoka", jp_name: "鶴岡"},
-    {name: "Sakaiminato", jp_name: "酒田"}
-  ]},
-  {pref: "福島県", cities: [
-    {name: "Fukushima", jp_name: "福島"},
-    {name: "Koriyama", jp_name: "郡山"},
-    {name: "Iwaki", jp_name: "いわき"}
-  ]}
+# 緯度・経度付きのデータ
+cities_data = [
+  { name: "Tokyo", jp_name: "東京", lat: 35.6895, lon: 139.6917 },
+  { name: "Osaka", jp_name: "大阪", lat: 34.6937, lon: 135.5023 },
+  { name: "Sapporo", jp_name: "札幌", lat: 43.0621, lon: 141.3544 }
+  # ... 他の都市も同様に lat, lon を追加
 ]
 
-data.each do |d|
-  prefecture = Prefecture.find_or_create_by!(name: d[:pref])
-  d[:cities].each do |c|
-    prefecture.cities.find_or_create_by!(name: c[:name]) do |city|
-      city.jp_name = c[:jp_name]
-    end
+cities_data.each do |data|
+  # 都道府県は適宜調整してください
+  pref = Prefecture.first 
+  City.find_or_create_by!(name: data[:name]) do |c|
+    c.jp_name = data[:jp_name]
+    c.latitude = data[:lat]
+    c.longitude = data[:lon]
+    c.prefecture = pref
   end
 end

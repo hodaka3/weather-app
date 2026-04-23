@@ -22,7 +22,8 @@ class WeatherRecord < ApplicationRecord
     # 環境変数からキーを取得
     api_key = ENV['OPENWEATHER_API_KEY']
     # 5日間/3時間ごとの予報APIを使用
-    url = "https://api.openweathermap.org/data/2.5/forecast?q=#{city.name},JP&appid=#{api_key}&units=metric"
+    encoded_city_name = URI.encode_www_form_component("#{city.name},JP")
+    url = "https://api.openweathermap.org/data/2.5/forecast?q=#{encoded_city_name}&appid=#{api_key}&units=metric&lang=ja"
 
     # API実行
     response = RestClient.get(url)
