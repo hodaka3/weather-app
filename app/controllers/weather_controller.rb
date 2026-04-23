@@ -10,7 +10,10 @@ class WeatherController < ApplicationController
         WeatherRecord.fetch_and_save(@city)
       end
       
-      @weathers = @city.weather_records.order(datetime: :desc).limit(20)
+      @weathers = @city.weather_records
+      .where("datetime >= ?", Time.current)
+      .order(datetime: :asc)
+      .limit(20)
     end
   end
 end
