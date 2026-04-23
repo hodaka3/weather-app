@@ -20,19 +20,28 @@ class WeatherController < ApplicationController
   end
 
   def fix_database
-    # 1. データの全削除（重複を解消）
-    City.delete_all
-    # 都道府県も重複している可能性がある場合は、以下もコメントアウトを外す
-    # Prefecture.delete_all
-
-    # 2. 1401件のシードを「バックグラウンド」で実行
-    # Thread.new を使うことで、ブラウザ側のタイムアウトを防ぎつつ、
-    # サーバー内部でゆっくりとデータを投入させます。
+    # 掃除とシードをバックグラウンドで実行
     Thread.new do
-      Rails.application.load_seed
+      # RailsのActiveRecordをスレッド内で安全に使うための設定
+      ActiveRecord::Base.connection_pool.with_connection do
+        begin
+          puts "--- データ掃除開始 ---"
+          City.delete_all
+          
+          puts "--- シード開始 ---"
+          # seeds.rb を直接読み込む
+          load Rails.root.join('db', 'seeds.rb')
+          
+          puts "--- すべての工程が完了しました ---"
+        rescue => e
+          puts "エラーが発生しました: #{e.message}"
+        end
+      end
     end
 
-    render plain: "データベースの掃除を完了し、バックグラウンドでシードを開始しました。5分ほどでピンが正しく表示されます。RenderのLogsを確認してください。"
+    render plain: "処理を受け付けました。RenderのLogsを確認してください。"
+  rescue => e
+    render plain: "エラーが発生しました: #{e.message}", status: 500
   end
 
 end
