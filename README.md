@@ -1,24 +1,23 @@
-# README
+# 日本全国の天気予報アプリ
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+https://weather-app-7mhq.onrender.com
 
-Things you may want to cover:
+地図上で選択した都市の天気予報をみることができるアプリケーションです。
 
-* Ruby version
+地図表示機能: Leafletを使用し、全国の主要都市を地図上にプロット。
 
-* System dependencies
+現在地の天気取得: OpenWeatherMap APIからリアルタイムの天気を取得。
 
-* Configuration
+多言語化対応: Google Geocoding APIを活用し、英語の都市データを日本語に変換。
 
-* Database creation
+データベースは表示する都市のリストやその都市の天気予報の保存に使用しています。
 
-* Database initialization
+◎使用技術（技術スタック）
 
-* How to run the test suite
+バックエンド: Ruby 4.0.2 / Ruby on Rails 8.1.3
 
-* Services (job queues, cache servers, search engines, etc.)
+データベース: PostgreSQL (Render) / SQLite3 (Local)
 
-* Deployment instructions
+フロントエンド: JavaScript (Leaflet.js)
 
-* ...
+外部API: OpenWeatherMap API / Google Maps Geocoding API
