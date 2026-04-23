@@ -1,3 +1,5 @@
+City.delete_all
+
 City.create!(name: 'Tokyo', jp_name: '東京', latitude: 35.6895, longitude: 139.6917, prefecture_id: 16)
 City.create!(name: 'Osaka', jp_name: '大阪', latitude: 34.6937, longitude: 135.5023, prefecture_id: 35)
 City.create!(name: 'Shingū', jp_name: '新宮市', latitude: 33.73333, longitude: 135.983337, prefecture_id: 9)
