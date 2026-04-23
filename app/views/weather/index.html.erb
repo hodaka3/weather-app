@@ -38,7 +38,7 @@
 
   <%# 天気データの表示部分 %>
   <% if @city %>
-    <h2><%= @city.jp_name %>（<%= @city.prefecture.name %>）の現在の天気</h2>
+    <h2><%= @city.jp_name %>の現在の天気</h2>
     
     <% if @weathers.any? %>
       <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
