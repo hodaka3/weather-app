@@ -1,21 +1,5 @@
 <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
   <h1 style="border-bottom: 2px solid #333;">日本全国の天気予報</h1>
-
-  <%# 都市選択フォーム %>
-  <div style="background: #f4f4f4; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
-    <%= form_with url: root_path, method: :get, local: true do |f| %>
-      <div style="margin-bottom: 10px;">
-        <%= f.label :city_id, "地域を選択してください:", style: "display: block; margin-bottom: 5px; font-weight: bold;" %>
-        
-        <%# 都道府県ごとに都市をグループ化して表示 %>
-        <%= f.grouped_collection_select :city_id, Prefecture.all, :cities, :name, :id, :jp_name, 
-                                        { prompt: "--- 都市を選択 ---" }, 
-                                        { style: "width: 100%; padding: 8px; font-size: 16px;" } %>
-      </div>
-      <%= f.submit "天気を表示する", style: "background: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer;" %>
-    <% end %>
-  </div>
-
   <div id="map" style="height: 500px; width: 100%; margin-top: 20px; border: 1px solid #ccc;"></div>
 
   <script>

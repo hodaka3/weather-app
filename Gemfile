@@ -74,3 +74,6 @@ group :test do
 end
 
 gem 'rest-client'
+gem "geocoder", "~> 1.8"
+
+gem "dotenv-rails", "~> 3.2"
