@@ -40,7 +40,8 @@ class WeatherRecord < ApplicationRecord
       record.update!(
         main: forecast.dig('weather', 0, 'main'), # 天気状態 (Rain, Cloudsなど)
         temp: forecast.dig('main', 'temp'),       # 気温
-        humidity: forecast.dig('main', 'humidity') # 湿度
+        humidity: forecast.dig('main', 'humidity'), # 湿度
+        icon: forecast.dig('weather', 0, 'icon')   # 天気アイコンのID
       )
     end
     puts "#{city.jp_name} のデータの取得と保存が完了しました！"

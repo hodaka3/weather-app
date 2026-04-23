@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_23_032423) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_23_033629) do
   create_table "cities", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "jp_name"
@@ -31,6 +31,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_23_032423) do
     t.datetime "created_at", null: false
     t.datetime "datetime"
     t.integer "humidity"
+    t.string "icon"
     t.string "main"
     t.float "precipitation"
     t.float "temp"
