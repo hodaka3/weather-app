@@ -1,22 +1,64 @@
-<h1>地域別の天気予報（3時間おき）</h1>
+<div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+  <h1 style="border-bottom: 2px solid #333;">日本全国の天気予報</h1>
 
-<table border="1">
-  <thead>
-    <tr>
-      <th>日時</th>
-      <th>気温 (°C)</th>
-      <th>風速 (m/s)</th>
-      <th>降水量 (mm)</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @weathers.each do |w| %>
-      <tr>
-        <td><%= w.datetime.strftime("%m/%d %H:%M") %></td>
-        <td><%= w.temperature %></td>
-        <td><%= w.wind_speed %></td>
-        <td><%= w.precipitation %></td>
-      </tr>
+  <%# 都市選択フォーム %>
+  <div style="background: #f4f4f4; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+    <%= form_with url: root_path, method: :get, local: true do |f| %>
+      <div style="margin-bottom: 10px;">
+        <%= f.label :city_id, "地域を選択してください:", style: "display: block; margin-bottom: 5px; font-weight: bold;" %>
+        
+        <%# 都道府県ごとに都市をグループ化して表示 %>
+        <%= f.grouped_collection_select :city_id, Prefecture.all, :cities, :name, :id, :jp_name, 
+                                        { prompt: "--- 都市を選択 ---" }, 
+                                        { style: "width: 100%; padding: 8px; font-size: 16px;" } %>
+      </div>
+      <%= f.submit "天気を表示する", style: "background: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer;" %>
     <% end %>
-  </tbody>
-</table>
+  </div>
+
+  <%# 天気データの表示部分 %>
+  <% if @city %>
+    <h2><%= @city.jp_name %>（<%= @city.prefecture.name %>）の現在の天気</h2>
+    
+    <% if @weathers.any? %>
+      <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
+        <thead>
+          <tr style="background: #eee;">
+            <th style="border: 1px solid #ccc; padding: 10px;">日時</th>
+            <th style="border: 1px solid #ccc; padding: 10px;">天気</th>
+            <th style="border: 1px solid #ccc; padding: 10px;">気温</th>
+            <th style="border: 1px solid #ccc; padding: 10px;">湿度</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @weathers.each do |weather| %>
+            <tr>
+              <td style="border: 1px solid #ccc; padding: 10px; text-align: center;">
+                <%= weather.datetime.strftime("%m/%d %H:%M") %>
+              </td>
+              <td style="border: 1px solid #ccc; padding: 10px; text-align: center;">
+                <%= weather.main_jp %>
+              </td>
+              <td style="border: 1px solid #ccc; padding: 10px; text-align: center;">
+                <%= weather.temp %>°C
+              </td>
+              <td style="border: 1px solid #ccc; padding: 10px; text-align: center;">
+                <%= weather.humidity %>%
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% else %>
+      <p style="color: #666;">まだデータがありません。「天気を表示する」ボタンを押して最新情報を取得してください。</p>
+    <% if @city.weather_records.empty? %>
+        <%# データがない場合、自動取得を促すか自動実行する処理をコントローラーに書くのがスムーズです %>
+    <% end %>
+  <% end %>
+  
+  <% else %>
+    <p style="background: #fff3cd; padding: 15px; border-left: 5px solid #ffecb5;">
+      上のメニューから都市を選択して、天気をチェックしてみましょう！
+    </p>
+  <% end %>
+</div>

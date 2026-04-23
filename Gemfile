@@ -7,7 +7,7 @@ gem "propshaft"
 
 # 修正後
 group :development, :test do
-  gem "sqlite3", "~> 1.4" # 開発中はSQLite
+  gem "sqlite3", ">= 2.1" # 開発中はSQLite
 end
 
 group :production do

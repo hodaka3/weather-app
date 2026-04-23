@@ -2,11 +2,27 @@ require 'rest-client'
 require 'json'
 
 class WeatherRecord < ApplicationRecord
-  def self.fetch_and_save
+  belongs_to :city
+
+  WEATHER_MAP = {
+    "Clear" => "晴れ",
+    "Clouds" => "曇り",
+    "Rain" => "雨",
+    "Snow" => "雪",
+    "Thunderstorm" => "雷雨",
+    "Drizzle" => "霧雨",
+    "Mist" => "霧"
+  }
+
+  def main_jp
+    WEATHER_MAP[main] || main
+  end
+
+  def self.fetch_and_save(city)
     # 環境変数からキーを取得
     api_key = ENV['OPENWEATHER_API_KEY']
-    city = "Tokyo" # 好きな都市名に変えてOK
-    url = "https://api.openweathermap.org/data/2.5/forecast?q=#{city}&appid=#{api_key}&units=metric"
+    # 5日間/3時間ごとの予報APIを使用
+    url = "https://api.openweathermap.org/data/2.5/forecast?q=#{city.name},JP&appid=#{api_key}&units=metric"
 
     # API実行
     response = RestClient.get(url)
@@ -14,17 +30,20 @@ class WeatherRecord < ApplicationRecord
 
     # 取得したリストをループしてDB保存
     data['list'].each do |forecast|
-      # datetimeが同じデータがあれば更新、なければ新規作成（重複防止）
-      record = self.find_or_initialize_by(datetime: Time.at(forecast['dt']))
+      # 「同じ都市」かつ「同じ日時」のデータがあればそれを使い、なければ新しく作る
+      record = self.find_or_initialize_by(
+        city: city,
+        datetime: Time.at(forecast['dt'])
+      )
       
-      record.update(
-        temperature: forecast.dig('main', 'temp'),
-        wind_speed: forecast.dig('wind', 'speed'),
-        # 降水量はデータがない場合があるので、なければ0を入れる
-        precipitation: forecast.dig('rain', '3h') || 0
+      # カラム名を現在のテーブル構成（main, temp, humidity）に合わせて更新
+      record.update!(
+        main: forecast.dig('weather', 0, 'main'), # 天気状態 (Rain, Cloudsなど)
+        temp: forecast.dig('main', 'temp'),       # 気温
+        humidity: forecast.dig('main', 'humidity') # 湿度
       )
     end
-    puts "データの取得と保存が完了しました！"
+    puts "#{city.jp_name} のデータの取得と保存が完了しました！"
   rescue => e
     puts "エラーが発生しました: #{e.message}"
   end
